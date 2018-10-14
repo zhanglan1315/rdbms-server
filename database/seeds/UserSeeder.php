@@ -7,7 +7,7 @@ class UserSeeder extends Seeder
 {
 	public function run()
 	{
-		DB::table('user')->insert([
+		$id = DB::table('user')->insert([
 			[
 				'name' => 'zhanglan',
 				'username' => 'zhanglan',
@@ -15,6 +15,12 @@ class UserSeeder extends Seeder
 				'email' => 'delylaric@gmail.com',
 				'roles' => array_encode([1, 2])
 			]
+		]);
+
+		DB::table('email')->insert([
+			'user_id' => $id,
+			'is_verified' => true,
+			'address' => 'delylaric@gmail.com'
 		]);
 	}
 }

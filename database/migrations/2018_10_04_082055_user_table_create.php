@@ -15,9 +15,7 @@ class UserTableCreate extends Migration
             $table->string('name')->nullable()->default(null);
             $table->string('username')->unique();
             $table->string('password');
-
-            $table->string('email')->nullable()->default(null);
-            $table->boolean('has_email_verified')->default(false);
+            $table->string('email')->unique();
 
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();

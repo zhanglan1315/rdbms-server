@@ -23,16 +23,22 @@ class UserController extends Controller
 
 	public function create()
 	{
-		$name = $this->get('name', 'nullable');
-		$email = $this->get('email', 'required');
-		$password = $this->get('password', 'required');
+		$pwd = $this->get('password', 'required');
+		$email = $this->get('email', 'required|unique:email,address');
 		$username = $this->get('username', 'required|unique:user,username');
 
-		DB::table('user')->insert([
-			'name' => $name,
+		$userId = DB::table('user')->insertGetId([
+			'name' => $username,
 			'email' => $email,
+			'password' => $pwd,
 			'username' => $username,
-			'password' => $password,
 		]);
+
+		DB::table('email')->insert([
+			'address' => $email,
+			'user_id' => $userId
+		]);
+		
+		return success_response('success to create account');
 	}
 }
