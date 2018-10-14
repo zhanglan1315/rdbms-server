@@ -4,15 +4,23 @@ namespace App\Http\Controllers;
 
 use DB;
 use JWT;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
 	public function test()
 	{
-		$message = 'token is valid';
+		if (JWT::isNeedToRefresh()) {
+			$token = JWT::refresh();
 
-		return success_response($message, 200);
+			return success_response([
+				'message' => 'token is need to refresh',
+				'token' => $token
+			]);
+		} else {
+			return success_response('token is valid', 200);
+		}
 	}
 
 	public function login()
