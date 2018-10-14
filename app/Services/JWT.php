@@ -65,6 +65,20 @@ class JWT
         ];
     }
 
+    public function refresh()
+    {
+        $id = $this->tokenInfo->id;
+        return $this->generate($id);
+    }
+
+    public function isNeedToRefresh()
+    {
+        $now = Carbon::now()->timestamp;
+        $rfa = $this->tokenInfo->rfa;
+
+        return $rfa < $now;
+    }
+
     public function parseToken()
     {
         $this->token = substr(request()->header('authorization'), 7);
@@ -83,23 +97,5 @@ class JWT
     public function tokenInfo()
     {
         return $this->tokenInfo;
-    }
-
-    // 利用 token 检查用户信息是否已更新
-    public function isUpdated()
-    {
-        $upd = $this->user()->updated_at;
-        $upd = Carbon::parse($upd)->timestamp;
-
-        return $upd !== $this->tokenInfo->upd;
-    }
-
-    public function isNeedToRefresh()
-    {
-        $rfa = $this->tokenInfo->rfa;
-        $exp = $this->tokenInfo->exp;
-        $now = Carbon::now()->timestamp;
-
-        return $now > $rfa && $now < $exp;
     }
 }
