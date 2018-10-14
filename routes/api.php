@@ -12,8 +12,6 @@ Route::get('connections', 'ConnectionController@all');
 Route::post('connections', 'ConnectionController@create');
 Route::put('connections/{id}', 'ConnectionController@update');
 Route::delete('connections/{id}', 'ConnectionController@destroy');
+Route::post('connections/test', 'ConnectionController@test');
 
-Route::get('postgres/test');
-Route::get('postgres/schema');
-Route::get('postgres/select');
-Route::get('postgres/update');
+Route::post('postgres/test', 'PostgresController@test');

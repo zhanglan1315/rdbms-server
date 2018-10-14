@@ -63,5 +63,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 
         'auth' => \App\Http\Middleware\Auth::class,
+        'postgres' => \App\Http\Middleware\Postgres::class,
     ];
 }

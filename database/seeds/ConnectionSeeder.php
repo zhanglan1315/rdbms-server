@@ -14,11 +14,11 @@ class ConnectionSeeder extends Seeder
         'name'      => 'Database ' . $index,
         'user_id'   => 1,
         'driver'    => 'pgsql',
-        'host'      => '115.159.51.252',
+        'host'      => 'localhost',
         'port'      => '5432',
         'username'  => 'postgres',
         'password'  => 'aeoikj_9217',
-        'database'  => 'slmg',
+        'database'  => 'postgres',
       ];
     }
 

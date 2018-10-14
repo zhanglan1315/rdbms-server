@@ -13,6 +13,7 @@ class ConnectionController extends Controller
 
     return DB::table('connection')
       ->where('user_id', $userId)
+      ->orderBy('id')
       ->get();
   }
 

@@ -1,11 +1,11 @@
 <?php 
 
 return [
-    'default' => 'public',
+    'default' => 'system',
 
     'connections' => [
 
-        'public'     => [
+        'system'     => [
             'driver'        => 'pgsql',
             'host'          => env('PGSQL_HOST'),
             'port'          => env('PGSQL_PORT'),

@@ -37,6 +37,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->mapApiRoutes();
         $this->mapOpenRoutes();
+        $this->mapPostgresRoutes();
     }
 
     /**
@@ -48,7 +49,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        Route::middleware('api')
+        Route::middleware(['auth'])
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
     }
@@ -57,5 +58,12 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::namespace($this->namespace)
              ->group(base_path('routes/open.php'));
+    }
+
+    protected function mapPostgresRoutes()
+    {
+        Route::middleware(['auth', 'postgres'])
+             ->namespace($this->namespace)
+             ->group(base_path('routes/postgres.php'));
     }
 }
