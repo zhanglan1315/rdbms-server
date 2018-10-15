@@ -12,6 +12,7 @@ return [
             'username'      => env('PGSQL_USERNAME'),
             'password'      => env('PGSQL_PASSWORD'),
             'database'      => env('PGSQL_DATABASE'),
+            'schema'        => 'public',
             'charset'       => 'utf8',
             'collation'     => 'utf8_unicode_ci',
             'prefix'        => '',
