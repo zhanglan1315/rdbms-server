@@ -11,9 +11,9 @@ class Postgres
 {
   public function handle($request, Closure $next)
   {
+    $schema = $request->input('schema');
     $id = $request->input('connectionId');
     $database = $request->input('database');
-    $schema = $request->input('schema');
 
     if (!is_numeric($id)) {
       $message = 'connectionId is illegal';
@@ -49,7 +49,7 @@ class Postgres
       'port' => $connection->port,
       'username' => $connection->username,
       'password' => $connection->password,
-      'schema' => $schema ? $schema : 'public',
+      'schema' => $schema ? $schema : $connection->schema,
       'database' => $database ? $database : $connection->database
     ]);
 

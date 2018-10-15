@@ -22,13 +22,14 @@ class ConnectionController extends Controller
     $userId = JWT::tokenInfo()->id;
 
     $params = $this->via([
-      'name' => 'nullable',
+      'name' => 'required',
       'driver' => 'required',
       'host' => 'required',
       'port' => 'required',
       'username' => 'required',
       'password' => 'nullable',
-      'database' => 'required',
+      'database' => 'nullable',
+      'schema' => 'nullable',
     ]);
 
     $params['user_id'] = $userId;
@@ -51,13 +52,14 @@ class ConnectionController extends Controller
   public function update($id)
   {
     $params = $this->via([
-      'name' => 'nullable',
+      'name' => 'required',
       'driver' => 'required',
       'host' => 'required',
       'port' => 'required',
       'username' => 'required',
       'password' => 'nullable',
-      'database' => 'required',
+      'database' => 'nullable',
+      'schema' => 'nullable',
     ]);
 
     DB::table('connection')->where('id', $id)->update($params);

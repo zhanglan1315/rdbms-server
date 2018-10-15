@@ -18,7 +18,8 @@ class ConnectionTableCreate extends Migration
             $table->string('port');
             $table->string('username');
             $table->string('password')->nullable();
-            $table->string('database');
+            $table->string('database')->nullable();
+            $table->string('schema')->nullable();
 
             $table->timestamp('created_at')->useCurrent();
 

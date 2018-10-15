@@ -19,6 +19,7 @@ class ConnectionSeeder extends Seeder
         'username'  => 'postgres',
         'password'  => 'aeoikj_9217',
         'database'  => 'postgres',
+        'schema'    => 'public',
       ];
     }
 
