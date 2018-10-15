@@ -21,13 +21,14 @@ class PostgresController extends Controller
       'port' => 'required',
       'username' => 'required',
       'password' => 'nullable',
-      'database' => 'required'
+      'database' => 'required',
+      'schema' => 'nullable',
     ]);
 
     Connection::config($params);
 
     try {
-      DB::select('select 100');
+      DB::select('select 100; /* for testing RDBMS connection */');
       return success_response('success to connect database');
     } catch (\Exception $e) {
       return error_response('fail to connect database');
