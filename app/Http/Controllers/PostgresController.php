@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use Connection;
+use Carbon\Carbon;
 
 class PostgresController extends Controller
 {
@@ -87,6 +88,51 @@ class PostgresController extends Controller
     return [
       'columns' => $columns,
       'data' => $query->fetchAll(\PDO::FETCH_NUM)
+    ];
+  }
+
+  public function table()
+  {
+    $table = $this->get('table', 'required');
+    $page = $this->get('page', 'nullable', 1);
+    $perPage = $this->get('perPage', 'nullable', 200);
+
+    $config = [];
+
+    $total = DB::table($table)
+      ->select(DB::raw('count(*)'))
+      ->pluck('count')->first();
+
+    $sql = DB::table($table)
+      ->select('ctid', '*')
+      ->limit($perPage)
+      ->offset($perPage * ($page - 1))
+      ->toSql();
+
+    $start = microtime(true);
+
+    $result = DB::getPdo()->query($sql);
+
+    $time = ((int)((microtime(true) - $start) * 1000)) / 1000; // 保留三位小数
+
+    $columns = [];
+    for ($i = 0, $L = $result->columnCount(); $i < $L; $i++) {
+      $column = $result->getColumnMeta($i);
+
+      $columns[] = [
+        'name' => $column['name'],
+        'type' => $column['native_type']
+      ];
+    }
+
+    return [
+      'sql' => $sql,
+      'page' => $page,
+      'time' => $time,
+      'total' => $total,
+      'perPage' => $perPage,
+      'columns' => $columns,
+      'data' => $result->fetchAll(\PDO::FETCH_NUM),
     ];
   }
 }
