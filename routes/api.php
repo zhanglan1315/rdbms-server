@@ -1,7 +1,9 @@
 <?php
 
+// todo: logout -> auth/logout
 Route::post('logout', 'AuthController@logout');
 
+Route::post('users', 'UserController@create');
 Route::post('auth/check', 'AuthController@test');
 Route::post('auth/refresh', 'AuthController@refresh');
 

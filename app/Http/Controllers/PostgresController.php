@@ -10,7 +10,6 @@ class PostgresController extends Controller
 {
   protected $systemSchemas = [
     'pg_toast', 'pg_temp_1', 'pg_toast_temp_1',
-    'pg_catalog', 'information_schema'
   ];
 
   public function test()
@@ -64,9 +63,20 @@ class PostgresController extends Controller
 
   public function all()
   {
-    config(['database.connections.customer.database' => 'postgres']);
+    $result = [];
 
-    return DB::table('migrations')->get();
+    $databases = DB::table('pg_database')
+      ->where('datistemplate', false)
+      ->pluck('datname');
+
+    return DB::select('SELECT schema_name FROM information_schema.schemata');
+
+    return DB::table('pg_namespace')
+    ->pluck('nspname');
+
+    return ($databases);
+
+    return $result;
   }
 
   public function select()
@@ -92,28 +102,37 @@ class PostgresController extends Controller
     ];
   }
 
-  public function table()
+  public function tableSearch()
   {
     $table = $this->get('table', 'required');
+    $where = $this->get('where', 'nullable');
     $page = $this->get('page', 'nullable', 1);
     $perPage = $this->get('perPage', 'nullable', 200);
 
-    $config = [];
+    $query = DB::table($table)
+      ->select(DB::raw('count(*)'));
+    $where && $query->whereRaw($where);
+    $total = $query->pluck('count')->first();
 
-    $total = DB::table($table)
-      ->select(DB::raw('count(*)'))
-      ->pluck('count')->first();
-
-    $sql = DB::table($table)
+    $query = DB::table($table)
       ->select('ctid', '*')
       ->limit($perPage)
-      ->offset($perPage * ($page - 1))
-      ->toSql();
+      ->offset($perPage * ($page - 1));
+
+    $where && $query->whereRaw($where);
+    $sql = $query->toSql();
 
     $start = microtime(true);
-
-    $result = DB::getPdo()->query($sql);
-
+    try {
+      $result = DB::getPdo()->query($sql);
+    } catch (\PDOException $e) {
+      if ($e->getSqlState()) {
+        return error_response([
+          'state' => $e->getSqlState(),
+          'message' => $e->getMessage()
+        ]);
+      }
+    }
     $time = ((int)((microtime(true) - $start) * 1000)) / 1000; // 保留三位小数
 
     $columns = [];
@@ -135,5 +154,19 @@ class PostgresController extends Controller
       'columns' => $columns,
       'data' => $result->fetchAll(\PDO::FETCH_NUM),
     ];
+  }
+
+  public function tableUpdate()
+  {
+    $table = $this->get('table', 'required');
+    $modifiers = $this->get('modifiers', 'required|array');
+
+    foreach ($modifiers as $modifier) {
+      DB::table($table)
+        ->where($modifier['where'])
+        ->update($modifier['set']);
+    }
+
+    return success_response('success to update table');
   }
 }

@@ -42,8 +42,8 @@ class JWT
     public function generate($id)
     {
         $now = Carbon::now()->timestamp;
-        $rfa = Carbon::now()->addDay(8)->timestamp;
-        $exp = Carbon::now()->addDay(10)->timestamp;
+        $rfa = Carbon::now()->addDay(1000)->timestamp;
+        $exp = Carbon::now()->addDay(1000)->timestamp;
 
 		$user = DB::table('user')
 			->select('id', 'updated_at')

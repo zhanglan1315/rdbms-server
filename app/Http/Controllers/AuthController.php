@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use DB;
 use JWT;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
